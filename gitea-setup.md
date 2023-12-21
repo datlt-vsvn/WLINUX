@@ -494,8 +494,7 @@ JWT_SECRET = *******************************************
   # !/usr/bin/env bash
   
   # XTERM Color
-  case "$TERM" in
-  xterm-color | *-256color) color_prompt=yes ;;
+  case "$TERM" in xterm-color | *-256color) color_prompt=yes ;;
   esac
   
   # define function
@@ -534,6 +533,7 @@ JWT_SECRET = *******************************************
   backup_dir="backup/"
   
   DEBUG=0
+  N_BACKUP_KEEP=10
   
   # Parse input arguments
   while [[ "$#" -gt 0 ]]; do
@@ -648,6 +648,8 @@ JWT_SECRET = *******************************************
   if [ ${flag_BACKUP} -gt 0 ]; then
       print_with_color "$ TARGET=${target_BACKUP} && docker-compose -f ${docker_compose_yml} run --rm backup\n" "\033[36m"
       eval "TARGET=${target_BACKUP} && docker-compose -f ${docker_compose_yml} run --rm backup"
+      print_with_color "$ ls -1t backup/ | tail -n+$((N_BACKUP_KEEP+1)) | xargs -I {} rm backup/{}\n" "\033[36m"
+      ls -1t backup/ | tail -n+$((N_BACKUP_KEEP+1)) | xargs -I {} rm backup/{}
   elif [ ${flag_RESTORE} -gt 0 ]; then
       print_with_color "$ TARGET=${target_RESTORE} && docker-compose -f ${docker_compose_yml} run --rm restore\n" "\033[36m"
       eval "TARGET=${target_RESTORE} && docker-compose -f ${docker_compose_yml} run --rm restore"
